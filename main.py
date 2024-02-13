@@ -4,6 +4,7 @@ import tkinter
 from tkinter import Scrollbar
 
 # Global variables
+
 boardSize = 0
 numberOfPlayers = 0
 gameFieldWindow = 0
@@ -80,6 +81,13 @@ def createGameField(size):
 
     # Center-north the game field in the main window
     game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
+
+    # Create stats side 
+    stats_canvas = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
+    stats_canvas.place(relx=0.85, rely=0.35 , anchor = 'center')
+
+
+
 
 def startGame():
 
