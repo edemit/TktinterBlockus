@@ -7,14 +7,14 @@ from tkinter import Scrollbar
 root = tkinter.Tk()
 root.title("Blokus")
 
-# Получаем размеры экрана
+# Get screen size
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
-# Устанавливаем размеры окна в зависимости от размеров экрана
+# Set window size depending on screen size
 root.geometry(f'{screen_width}x{screen_height}')
 
-# Делаем окно масштабируемым
+# Resizable window
 root.resizable(True, True)
 
 # Create the adaptive canvas
@@ -23,7 +23,7 @@ canvas_width = screen_width * 0.8  # Устанавливаем ширину х�
 canvas_height = screen_height * 0.8  # Устанавливаем высоту холста равной 80% высоты экрана
 canvas = tkinter.Canvas(root, width=canvas_width, height=canvas_height, scrollregion=(0,0,canvas_width,canvas_height))
 
-# Размещаем холст в центре окна
+# Canvas in the center of the window
 canvas.pack(expand=True)
 
 # Create the game field ganerator window in tkinter window before starting the game to change the size of the game field or number of players
@@ -35,16 +35,16 @@ def gameFieldGenerator():
     gameFieldWindow.title("Game field generator")
     gameFieldWindow.geometry("300x200")
 
-    # Создаем список возможных размеров доски
-    boardSizes = [str(i) for i in range(5, 21)]  # Допустим, размеры доски могут быть от 5 до 20
+    # List of possible board sizes
+    boardSizes = [str(i) for i in range(5, 21)]  # 5x5, 6x6, 7x7, ..., 20x20
     boardSize = tkinter.StringVar(gameFieldWindow)
-    boardSize.set(boardSizes[0])  # Устанавливаем начальное значение
+    boardSize.set(boardSizes[0])  # Default value
     boardSizeLabel = tkinter.Label(gameFieldWindow, text="Board size:")
     boardSizeLabel.pack()
     boardSizeMenu = tkinter.OptionMenu(gameFieldWindow, boardSize, *boardSizes)
     boardSizeMenu.pack()
 
-    # Создаем Spinbox для выбора количества игроков
+    # Spinbox creation
     numberOfPlayersLabel = tkinter.Label(gameFieldWindow, text="Number of players 2-4:")
     numberOfPlayersLabel.pack()
     numberOfPlayers = tkinter.Spinbox(gameFieldWindow, from_=2, to=4)
@@ -58,7 +58,7 @@ def gameFieldGenerator():
 
 # Create the game field
 def createGameField(size):
-    # Рассчитываем размеры клетки в зависимости от выбранного размера и размера холста
+    # Calculate the size of the cell depending on the size of the game field
     cell_size = min(canvas_width, canvas_height) // size
 
     for i in range(size):
@@ -71,17 +71,17 @@ def createGameField(size):
 
 def startGame():
 
-    # Получаем выбранные пользователем параметры
+    # Getting the size of the game field and the number of players from the game field generator window
     size = int(boardSize.get())
     players = int(numberOfPlayers.get())
     
-    # Скрываем окно генератора игрового поля
+    # Close the game field generator window
     gameFieldWindow.withdraw()
 
-    # Устанавливаем окно с полем поверх всех остальных окон
+    # Set the main window to the top level
     root.attributes('-topmost', True)
 
-    # Здесь начинаем игру с выбранными параметрами
+    # Here we start game with chosen parameters
     # ...
 
 gameFieldGenerator()
