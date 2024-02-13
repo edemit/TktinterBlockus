@@ -65,7 +65,7 @@ def gameFieldGenerator():
 # Create the game field
 def createGameField(size):
     # Calculate the size of the cell depending on the size of the game field
-    cell_size = min(canvas_width, canvas_height) // size
+    cell_size = min(canvas_width, canvas_height) // (size * 1.5)
 
     # Create the game field
     game_canvas = tkinter.Canvas(canvas, width=cell_size*size, height=cell_size*size, bg='white')
@@ -79,7 +79,7 @@ def createGameField(size):
             game_canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")
 
     # Center-north the game field in the main window
-    game_canvas.place(relx=0.5, rely=0.5, anchor = 'center')
+    game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
 
 def startGame():
 
