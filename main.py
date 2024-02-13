@@ -6,6 +6,7 @@ import ConceptionBriques
 from ConceptionBriques import ConceptionBriques
 
 # Global variables
+
 boardSize = 0
 numberOfPlayers = 0
 gameFieldWindow = 0
@@ -67,7 +68,7 @@ def gameFieldGenerator():
 # Create the game field
 def createGameField(size):
     # Calculate the size of the cell depending on the size of the game field
-    cell_size = min(canvas_width, canvas_height) // size
+    cell_size = min(canvas_width, canvas_height) // (size * 1.5)
 
     # Create the game field
     game_canvas = tkinter.Canvas(canvas, width=cell_size*size, height=cell_size*size, bg='white')
@@ -85,7 +86,14 @@ def createGameField(size):
     instance.conception(1) 
 
     # Center-north the game field in the main window
-    game_canvas.place(relx=0.5, rely=0.5, anchor = 'center')
+    game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
+
+    # Create stats side 
+    stats_canvas = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
+    stats_canvas.place(relx=0.85, rely=0.35 , anchor = 'center')
+
+
+
 
 def startGame():
 
