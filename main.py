@@ -3,6 +3,11 @@
 import tkinter 
 from tkinter import Scrollbar
 
+# Global variables
+boardSize = 0
+numberOfPlayers = 0
+gameFieldWindow = 0
+
 # Create the main window
 root = tkinter.Tk()
 root.title("Blokus")
@@ -19,11 +24,12 @@ root.resizable(True, True)
 
 # Create the adaptive canvas
 global canvas
-canvas_width = screen_width * 0.8  # Устанавливаем ширину холста равной 80% ширины экрана
-canvas_height = screen_height * 0.8  # Устанавливаем высоту холста равной 80% высоты экрана
-canvas = tkinter.Canvas(root, width=canvas_width, height=canvas_height, scrollregion=(0,0,canvas_width,canvas_height))
+canvas_width = screen_width * 0.95  # Define the width of the canvas depending on the screen size
+canvas_height = screen_height * 0.9  # Define the height of the canvas depending on the screen size
+canvas = tkinter.Canvas(root, width=canvas_width, height=canvas_height, scrollregion=(0,0,canvas_width,canvas_height), bg='green')
 
 # Canvas in the center of the window
+canvas.place(relx=0.5, rely=0.5, anchor='center')
 canvas.pack(expand=True)
 
 # Create the game field ganerator window in tkinter window before starting the game to change the size of the game field or number of players
@@ -61,13 +67,19 @@ def createGameField(size):
     # Calculate the size of the cell depending on the size of the game field
     cell_size = min(canvas_width, canvas_height) // size
 
+    # Create the game field
+    game_canvas = tkinter.Canvas(canvas, width=cell_size*size, height=cell_size*size, bg='white')
+
     for i in range(size):
         for j in range(size):
             x1 = i * cell_size
             y1 = j * cell_size
             x2 = x1 + cell_size
             y2 = y1 + cell_size
-            canvas.create_rectangle(x1, y1, x2, y2)
+            game_canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")
+
+    # Center-north the game field in the main window
+    game_canvas.place(relx=0.5, rely=0.5, anchor = 'center')
 
 def startGame():
 
