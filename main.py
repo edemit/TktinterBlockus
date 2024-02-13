@@ -7,10 +7,10 @@ from ConceptionBriques import ConceptionBriques
 
 # Global variables
 
-boardSize = 0
+boardSize = 0 
 numberOfPlayers = 0
 gameFieldWindow = 0
-playerTurn = 0
+playerTurn = 0 #int 
 
 # Create the main window
 root = tkinter.Tk()
@@ -84,7 +84,7 @@ def createGameField(size):
 
     #Instanciation des briques 
     instance = ConceptionBriques(cell_size, canvas)
-    instance.conception(1) 
+    instance.conception(2,playerTurn) 
 
     # Center-north the game field in the main window
     game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
