@@ -89,11 +89,12 @@ def createGameField(size):
     # Center-north the game field in the main window
     game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
 
-    # Create stats side 
+    # Create piece side for each player
     stats_canvas = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
     stats_canvas.place(relx=0.85, rely=0.35 , anchor = 'center')
 
-
+    figures_canvas = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
+    figures_canvas.place(relx=0.15, rely=0.35 , anchor = 'center')
 
 
 def startGame():
