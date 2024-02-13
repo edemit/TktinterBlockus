@@ -2,6 +2,8 @@
 
 import tkinter 
 from tkinter import Scrollbar
+import ConceptionBriques
+from ConceptionBriques import ConceptionBriques
 
 # Global variables
 boardSize = 0
@@ -77,6 +79,10 @@ def createGameField(size):
             x2 = x1 + cell_size
             y2 = y1 + cell_size
             game_canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")
+
+    #Instanciation des briques 
+    instance = ConceptionBriques(cell_size, canvas)
+    instance.conception(1) 
 
     # Center-north the game field in the main window
     game_canvas.place(relx=0.5, rely=0.5, anchor = 'center')
