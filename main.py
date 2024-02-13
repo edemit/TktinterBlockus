@@ -10,6 +10,7 @@ from ConceptionBriques import ConceptionBriques
 boardSize = 0
 numberOfPlayers = 0
 gameFieldWindow = 0
+playerTurn = 0
 
 # Create the main window
 root = tkinter.Tk()
