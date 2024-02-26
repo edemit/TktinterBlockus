@@ -89,9 +89,12 @@ def createGameField(size):
     # Center-north the game field in the main window
     game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
 
-    # Create stats side 
-    stats_canvas = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
-    stats_canvas.place(relx=0.85, rely=0.35 , anchor = 'center')
+    # Create block for gane pieces on each side of the game field
+    block_canvas1 = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
+    block_canvas2 = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
+    block_canvas1.place(relx=0.85, rely=0.35 , anchor = 'center')
+    block_canvas2.place(relx=0.15, rely=0.35 , anchor = 'center')
+
 
 
 
