@@ -68,23 +68,23 @@ def gameFieldGenerator():
 
 # Create the game field
 def createGameField(size):
+    padding = 10  # Add padding
     # Calculate the size of the cell depending on the size of the game field
-    cell_size = min(canvas_width, canvas_height) // (size * 1.5)
+    cell_size = (min(canvas_width, canvas_height) - 2 * padding) // (size * 1.5)
 
     # Create the game field
-    game_canvas = tkinter.Canvas(canvas, width=cell_size*size, height=cell_size*size, bg='white')
+    game_canvas = tkinter.Canvas(canvas, width=cell_size*size + 2 * padding, height=cell_size*size + 2 * padding, bg='white')
 
     for i in range(size):
         for j in range(size):
-            x1 = i * cell_size
-            y1 = j * cell_size
+            x1 = i * cell_size + padding
+            y1 = j * cell_size + padding
             x2 = x1 + cell_size
             y2 = y1 + cell_size
             game_canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")
 
-    #Instanciation des briques 
+    #Instanciation of blocks
     instance = ConceptionBriques(cell_size, canvas)
-    instance.conception(2,playerTurn) 
 
     # Center-north the game field in the main window
     game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
@@ -95,7 +95,15 @@ def createGameField(size):
     block_canvas1.place(relx=0.85, rely=0.35 , anchor = 'center')
     block_canvas2.place(relx=0.15, rely=0.35 , anchor = 'center')
 
-
+    for player in range(int(numberOfPlayers.get())):
+        blocks = instance.generate_blocks(player)
+        for i, block in enumerate(blocks):
+            for rect in block:
+                x1, y1, x2, y2 = canvas.coords(rect)
+                if player % 2 == 0:
+                    block_canvas1.create_rectangle(x1 + i * cell_size * 5, y1, x2 + i * cell_size * 5, y2, fill=canvas.itemcget(rect, "fill"))
+                else:
+                    block_canvas2.create_rectangle(x1 + i * cell_size * 5, y1, x2 + i * cell_size * 5, y2, fill=canvas.itemcget(rect, "fill"))
 
 
 
