@@ -10,7 +10,7 @@ class ConceptionBriques:
         self.blocks = [self.createRectangle(x, y, color) for x, y in coords] # Create a block
 
     def generate_blocks(self, playerTurn):
-        colors = {0: "red", 1: "blue", 2: "green", 3: "yellow"} # Define the colors of the blocks
+        colors = {0: "blue", 1: "red", 2: "green", 3: "yellow"} # Define the colors of the blocks
         color = colors[playerTurn] # Define the color of the blocks
 
         # Define the shapes of the blocks
