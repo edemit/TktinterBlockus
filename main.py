@@ -7,10 +7,10 @@ from ConceptionBriques import ConceptionBriques
 
 # Global variables
 
-boardSize = 0
+boardSize = 0 
 numberOfPlayers = 0
 gameFieldWindow = 0
-playerTurn = 0
+playerTurn = 0 #int 
 
 # Create the main window
 root = tkinter.Tk()
@@ -68,37 +68,54 @@ def gameFieldGenerator():
 
 # Create the game field
 def createGameField(size):
+    padding = 10  # Add padding
     # Calculate the size of the cell depending on the size of the game field
-    cell_size = min(canvas_width, canvas_height) // (size * 1.5)
+    cell_size = (min(canvas_width, canvas_height) - 2 * padding) // (size * 1.5)
 
     # Create the game field
-    game_canvas = tkinter.Canvas(canvas, width=cell_size*size, height=cell_size*size, bg='white')
+    global game_canvas 
+    game_canvas = tkinter.Canvas(canvas, width=cell_size*size + 2 * padding, height=cell_size*size + 2 * padding, bg='white')
 
     for i in range(size):
         for j in range(size):
-            x1 = i * cell_size
-            y1 = j * cell_size
+            x1 = i * cell_size + padding
+            y1 = j * cell_size + padding
             x2 = x1 + cell_size
             y2 = y1 + cell_size
             game_canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")
 
-    #Instanciation des briques 
+    #Instanciation of blocks
     instance = ConceptionBriques(cell_size, canvas)
-    instance.conception(1) 
 
     # Center-north the game field in the main window
     game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
 
-    # Create piece side for each player
-    stats_canvas = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
-    stats_canvas.place(relx=0.85, rely=0.35 , anchor = 'center')
+    # Create block for gane pieces on each side of the game field
+    global block_canvas1
+    global block_canvas2 
+    block_canvas1 = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
+    block_canvas2 = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
+    block_canvas1.place(relx=0.15, rely=0.35 , anchor = 'center')
+    block_canvas2.place(relx=0.85, rely=0.35 , anchor = 'center')
 
-    figures_canvas = tkinter.Canvas(canvas, width=cell_size*size*0.8, height=cell_size*size, bg='white')
-    figures_canvas.place(relx=0.15, rely=0.35 , anchor = 'center')
+    global gamePiecesPlayer1
+    global gamePiecesPlayer2
+    gamePiecesPlayer1 = [None,None]
+    gamePiecesPlayer2 = [None,None] 
 
-
+    for player in range(int(numberOfPlayers.get())):
+        blocks = instance.generate_blocks(player)
+        for i, block in enumerate(blocks):
+            for rect in block:
+                x1, y1, x2, y2 = canvas.coords(rect)
+                if player % 2 == 0:
+                    gamePiecesPlayer1[player] = block_canvas1.create_rectangle(x1 + i * cell_size * 5, y1, x2 + i * cell_size * 5, y2, fill=canvas.itemcget(rect, "fill"))
+                else:
+                    gamePiecesPlayer2[player] = block_canvas2.create_rectangle(x1 + i * cell_size * 5, y1, x2 + i * cell_size * 5, y2, fill=canvas.itemcget(rect, "fill"))
+      
+    game_canvas.bind("<Button-1>",gamePiecesPlayer1Movement)
+    
 def startGame():
-
     # Getting the size of the game field and the number of players from the game field generator window
     size = int(boardSize.get())
     players = int(numberOfPlayers.get())
@@ -111,6 +128,30 @@ def startGame():
 
     # Here we start game with chosen parameters
     # ...
+
+def gamePiecesPlayer1Movement(event):
+    print("h")
+    global canMovePiece 
+    canMovePiece = (canMovePiece + 1)%2  
+    if (canMovePiece == 1):
+        print("here") 
+        game_canvas.bind("<Motion>",glisser)
+        old[0]=event.x
+        old[1]=event.y
+    else:
+        game_canvas.unbind("<Motion>")
+
+def glisser(event):
+    x1, y1, x2, y2 = game_canvas.coords(gamePiecesPlayer1[0])
+    print(x1, y1, x2, y2)
+    if (old[0] >= x1 and old[0] <= x2 and old[1] >= y1 and old[1] <= y2):
+        print("piece moved")
+        game_canvas.move(gamePiecesPlayer1[0], event.x-old[0], event.y-old[1])
+        old[0]=event.x
+        old[1]=event.y
+        
+old = [None, None]
+canMovePiece = 0 
 
 gameFieldGenerator()
 
