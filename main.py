@@ -11,6 +11,7 @@ boardSize = 0
 numberOfPlayers = 0
 gameFieldWindow = 0
 playerTurn = 0 #int 
+gamePiecesPlayer = []  # Declare gamePiecesPlayer as a global variable
 
 # Create the main window
 root = tkinter.Tk()
@@ -60,14 +61,17 @@ def gameFieldGenerator():
     numberOfPlayers = tkinter.Spinbox(gameFieldWindow, from_=2, to=4)
     numberOfPlayers.pack()
 
-    startButton = tkinter.Button(gameFieldWindow, text="Start game", command=lambda: [startGame(), createGameField(int(boardSize.get()))])
+    startButton = tkinter.Button(gameFieldWindow, text="Start game", command=lambda: [createGameField(int(boardSize.get())), startGame()])
     startButton.pack()
     gameFieldWindow.protocol("WM_DELETE_WINDOW", root.destroy)
     gameFieldWindow.attributes("-topmost", True)
     gameFieldWindow.mainloop()
 
 # Create the game field
+# Create the game field
 def createGameField(size):
+    global gamePiecesPlayer  # Declare gamePiecesPlayer as global at the start of the function
+
     padding = 10  # Add padding
     # Calculate the size of the cell depending on the size of the game field
     cell_size = (min(canvas_width, canvas_height) - 2 * padding) // (size * 1.5)
@@ -86,11 +90,17 @@ def createGameField(size):
 
     #Instanciation of blocks
     instance = ConceptionBriques(cell_size, canvas)
+    blocks = instance.generate_blocks(playerTurn)
+    
+    # Store the blocks in a list
+    gamePiecesPlayer = []
+    for player in range(int(numberOfPlayers.get())):
+        block = instance.generate_blocks(player)
+        gamePiecesPlayer.append(block)
 
     # Center-north the game field in the main window
     game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
     
-    global gamePiecesPlayer 
     gamePiecesPlayer = []
     block = []
 
@@ -102,7 +112,11 @@ def createGameField(size):
                 x1, y1, x2, y2 = game_canvas.coords(rect)
                 gamePiecesPlayer.append(game_canvas.create_rectangle(x1, y1, x2, y2, fill = "blue")) 
 
-    game_canvas.bind("<Button-1>",gamePiecesPlayer1Movement) 
+    instance = ConceptionBriques(cell_size, canvas)
+    blocks = instance.generate_blocks(playerTurn)
+    canvas.bind("<Button-1>", instance.select_block)
+    canvas.bind("<B1-Motion>", instance.move_block)
+    canvas.bind("<ButtonRelease-1>", instance.release_block)
 
 def startGame():
     # Getting the size of the game field and the number of players from the game field generator window
@@ -115,29 +129,6 @@ def startGame():
     # Set the main window to the top level
     root.attributes('-topmost', True)
 
-    # Here we start game with chosen parameters
-    # ...
-
-def gamePiecesPlayer1Movement(event):
-    global canMovePiece 
-    canMovePiece = (canMovePiece + 1)%2  
-    if (canMovePiece == 1):
-        game_canvas.bind("<Motion>",glisser)
-        old[0]=event.x
-        old[1]=event.y
-    else:
-        game_canvas.unbind("<Motion>")
-        
-def glisser(event):
-    x1, y1, x2, y2 = game_canvas.coords(gamePiecesPlayer[0])
-    print(gamePiecesPlayer[0], x1, y1, x2, y2)
-    if (old[0] >= x1 and old[0] <= x2 and old[1] >= y1 and old[1] <= y2):
-        game_canvas.move(gamePiecesPlayer[0], event.x-old[0], event.y-old[1])
-        old[0]=event.x
-        old[1]=event.y
-        
-old = [None, None]
-canMovePiece = 0 
 
 gameFieldGenerator()
 
