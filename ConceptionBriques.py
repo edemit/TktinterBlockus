@@ -31,7 +31,7 @@ class ConceptionBriques:
         for shape in shapes.values():  # for each shape
             self.conception(shape, color) # Create a block
             blocks.append(self.blocks) # Add the block to the list of blocks
-        return blocks # Return the list of blocks
+        return blocks # Return the list of blocks.
     
     def select_block(self, event):
         self.selected_block = self.canvas.find_closest(event.x, event.y)[0]
