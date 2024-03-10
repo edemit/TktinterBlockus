@@ -1,9 +1,10 @@
 # Blokus game is a strategy game for 2-4 players where you try to lay down as many of your tiles on the board as you can. When you play a tile, you must place it so it touches a corner on at least one of your other pieces. Once you play as many tiles as you can, count the tiles that you weren’t able to place to determine the winner.
 
 import tkinter 
-from tkinter import Scrollbar
 import ConceptionBriques
-from ConceptionBriques import ConceptionBriques
+from ConceptionBriques import ConceptionBriques 
+import Controleur
+from Controleur import ControleurInput 
 
 # Global variables
 
@@ -36,6 +37,8 @@ canvas = tkinter.Canvas(root, width=canvas_width, height=canvas_height, scrollre
 # Canvas in the center of the window
 canvas.place(relx=0.5, rely=0.5, anchor='center')
 canvas.pack(expand=True)
+
+controleur = ControleurInput() 
 
 # Create the game field ganerator window in tkinter window before starting the game to change the size of the game field or number of players
 def gameFieldGenerator():
@@ -71,52 +74,90 @@ def gameFieldGenerator():
 # Create the game field
 def createGameField(size):
     global gamePiecesPlayer  # Declare gamePiecesPlayer as global at the start of the function
+    global gamePiecesPlayerCoordinates 
 
     padding = 10  # Add padding
     # Calculate the size of the cell depending on the size of the game field
+    global cell_size 
     cell_size = (min(canvas_width, canvas_height) - 2 * padding) // (size * 1.5)
 
-    # Create the game field
-    global game_canvas 
-    game_canvas = tkinter.Canvas(canvas, width=cell_size*size + 2 * padding, height=cell_size*size + 2 * padding, bg='white')
-
+    global gameBoardCoordinates
+    gameBoardCoordinates = []
     for i in range(size):
         for j in range(size):
             x1 = i * cell_size + padding
             y1 = j * cell_size + padding
             x2 = x1 + cell_size
             y2 = y1 + cell_size
-            game_canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")
+            canvas.create_rectangle(x1 + canvas_width/3, y1 + canvas_height/4, x2 + canvas_width/3, y2 + canvas_height/4, fill="white", outline="black")
+            gameBoardCoordinates.append((x1,y1,x2,y2)) 
 
     #Instanciation of blocks
     instance = ConceptionBriques(cell_size, canvas)
     blocks = instance.generate_blocks(playerTurn)
-    
-    # Store the blocks in a list
+    global block 
+
+    # Store the blocks and theirs coordinates in lists 
     gamePiecesPlayer = []
-    for player in range(int(numberOfPlayers.get())):
-        block = instance.generate_blocks(player)
-        gamePiecesPlayer.append(block)
-
-    # Center-north the game field in the main window
-    game_canvas.place(relx=0.5, rely=0.35, anchor = 'center')
+    gamePiecesPlayerCoordinates = []
     
-    gamePiecesPlayer = []
-    block = []
+    #Placement of the figures 
+    for player in range(1,int(numberOfPlayers.get())):
+        player_blocks = instance.generate_blocks(player)
+        if player%2 == 0:
+            x_offset = canvas_width/4
+        else: 
+            x_offset = canvas_width - (len(player_blocks[0]) * cell_size + 50) 
+        for block in player_blocks:
+            for item in block:
+                canvas.move(item, x_offset, 0)
+            gamePiecesPlayer.append(player_blocks)
+            gamePiecesPlayerCoordinates.append(canvas.coords(player_blocks))
 
-    for player in range(int(numberOfPlayers.get())):
-        block = instance.generate_blocks(player)
-        print(block) 
-        for i, block in enumerate(block):
-            for rect in block:
-                x1, y1, x2, y2 = game_canvas.coords(rect)
-                gamePiecesPlayer.append(game_canvas.create_rectangle(x1, y1, x2, y2, fill = "blue")) 
 
-    instance = ConceptionBriques(cell_size, canvas)
-    blocks = instance.generate_blocks(playerTurn)
-    canvas.bind("<Button-1>", instance.select_block)
-    canvas.bind("<B1-Motion>", instance.move_block)
-    canvas.bind("<ButtonRelease-1>", instance.release_block)
+
+def selectionner(event):
+    global c, item 
+    c = (c + 1) % 2
+    if c == 1:
+        item = canvas.find_closest(event.x, event.y) 
+        old[0] = event.x
+        old[1] = event.y
+        canvas.bind("<Motion>",glisser)
+    else:
+        old[0] = None
+        old[1] = None
+        canvas.unbind("<Motion>")
+        deposer(event.x,event.y)
+
+def glisser(event):
+    global item, gameBoardCoordinates 
+    x1, y1, x2, y2 = canvas.coords(item)
+    if (old[0] >= x1 and old[0] <= x2 and old[1] >= y1 and old[1] <= y2):
+        for coord in gameBoardCoordinates:
+            if coord == x1 and coord == y1 and coord == x2 and coord == y2:
+                return
+        canvas.move(item, event.x-old[0], event.y-old[1])
+        old[0]=event.x
+        old[1]=event.y
+
+def deposer(x,y):
+    global item, gameBoardCoordinates
+    x1, y1, x2, y2 = canvas.coords(item)
+    move = False 
+
+    if (move == False):         
+        #-------------------------
+        #Cette partie du code pose problème, nous l'avons désactivé pour l'instant 
+        #initialPosition = gameBoardCoordinates[x1,y1,x2,y2]
+        #canvas.move(item,initialPosition,0)
+        pass 
+
+old = [None,None]
+c = 0 
+
+controleur.initProperties(canvas,selectionner)
+controleur.input() 
 
 def startGame():
     # Getting the size of the game field and the number of players from the game field generator window
@@ -128,7 +169,6 @@ def startGame():
 
     # Set the main window to the top level
     root.attributes('-topmost', True)
-
 
 gameFieldGenerator()
 
