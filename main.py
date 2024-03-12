@@ -84,6 +84,7 @@ def createGameField(size):
     gameBoardPieces = [] 
     for i in range(0,2):
             instanceGameBoard = ConceptionBriques(cell_size,canvas)
+            instanceGameBoard.canMovePiece = False 
             gameBoardPiece = instanceGameBoard.generateGameBoardPieces()
             for j in gameBoardPiece: 
                 for k in j:
@@ -117,7 +118,6 @@ def selectionner(event):
     c = (c + 1) % 2
     if c == 1:
         item = canvas.find_closest(event.x, event.y)
-        #if (item.canMovePiece):
         old[0] = event.x
         old[1] = event.y
         canvas.bind("<Motion>",glisser)
@@ -126,7 +126,7 @@ def selectionner(event):
         old[1] = None
         canvas.unbind("<Motion>")
         deposer(event.x,event.y)
-
+        
 def glisser(event):
     global item  
     x1, y1, x2, y2 = canvas.coords(item)
