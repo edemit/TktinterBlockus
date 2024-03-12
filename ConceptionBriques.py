@@ -7,9 +7,9 @@ class ConceptionBriques:
         self.old_coords = None
 
     def createRectangle(self, x, y, color):
-        return self.canvas.create_rectangle(x*self.unite, y*self.unite, (x+1)*self.unite, (y+1)*self.unite, fill=color)
+        return self.canvas.create_rectangle(x*self.unite, y*self.unite, (x+1)*self.unite, (y+1)*self.unite, fill=color) 
 
-    def conception(self, coords, color):
+    def conception(self, coords,color):
         self.blocks = [self.createRectangle(x, y, color) for x, y in coords]
 
     def generate_blocks(self, playerTurn):
@@ -26,9 +26,20 @@ class ConceptionBriques:
             #"stick": [(0, 0), (0, 1), (0, 2), (0, 3)],
             #"T": [(0, 0), (1, 0), (2, 0), (1, 1)]
         }
+        canMovePiece = True 
 
         blocks = [] # Create a list of blocks
         for shape in shapes.values():  # for each shape
             self.conception(shape, color) # Create a block
             blocks.append(self.blocks) # Add the block to the list of blocks
         return blocks # Return the list of blocks
+    
+    def generateGameBoardPieces(self):
+        block = []
+        shape = {"GBP" : [(0, 0), (0, 1), (1, 0), (1, 1)]}
+        canMovePiece = False 
+        for s in shape.values():
+            self.conception(s, "white")
+
+            block.append(self.blocks)
+        return block 

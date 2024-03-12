@@ -81,26 +81,25 @@ def createGameField(size):
     global cell_size 
     cell_size = (min(canvas_width, canvas_height) - 2 * padding) // (size * 1.5)
 
-    global gameBoardCoordinates
-    gameBoardCoordinates = []
-    for i in range(size):
-        for j in range(size):
-            x1 = i * cell_size + padding
-            y1 = j * cell_size + padding
-            x2 = x1 + cell_size
-            y2 = y1 + cell_size
-            canvas.create_rectangle(x1 + canvas_width/3, y1 + canvas_height/4, x2 + canvas_width/3, y2 + canvas_height/4, fill="white", outline="black")
-            gameBoardCoordinates.append((x1,y1,x2,y2)) 
-
+    gameBoardPieces = [] 
+    for i in range(0,2):
+            instanceGameBoard = ConceptionBriques(cell_size,canvas)
+            gameBoardPiece = instanceGameBoard.generateGameBoardPieces()
+            for j in gameBoardPiece: 
+                for k in j:
+                    x_offset = 0
+                    canvas.move(j,x_offset,0)
+                    gameBoardPieces.append(gameBoardPiece)
+                    x_offset += 100 
+            
     #Instanciation of blocks
     instance = ConceptionBriques(cell_size, canvas)
     blocks = instance.generate_blocks(playerTurn)
     global block 
 
-    # Store the blocks and theirs coordinates in lists 
+    # Store the blocks in lists 
     gamePiecesPlayer = []
-    gamePiecesPlayerCoordinates = []
-    
+
     #Placement of the figures 
     for player in range(1,int(numberOfPlayers.get())):
         player_blocks = instance.generate_blocks(player)
@@ -112,15 +111,13 @@ def createGameField(size):
             for item in block:
                 canvas.move(item, x_offset, 0)
             gamePiecesPlayer.append(player_blocks)
-            gamePiecesPlayerCoordinates.append(canvas.coords(player_blocks))
-
-
 
 def selectionner(event):
-    global c, item 
+    global c, item, itemType 
     c = (c + 1) % 2
     if c == 1:
-        item = canvas.find_closest(event.x, event.y) 
+        item = canvas.find_closest(event.x, event.y)
+        #if (item.canMovePiece):
         old[0] = event.x
         old[1] = event.y
         canvas.bind("<Motion>",glisser)
@@ -131,27 +128,16 @@ def selectionner(event):
         deposer(event.x,event.y)
 
 def glisser(event):
-    global item, gameBoardCoordinates 
+    global item  
     x1, y1, x2, y2 = canvas.coords(item)
     if (old[0] >= x1 and old[0] <= x2 and old[1] >= y1 and old[1] <= y2):
-        for coord in gameBoardCoordinates:
-            if coord == x1 and coord == y1 and coord == x2 and coord == y2:
-                return
         canvas.move(item, event.x-old[0], event.y-old[1])
         old[0]=event.x
         old[1]=event.y
 
 def deposer(x,y):
-    global item, gameBoardCoordinates
+    global item
     x1, y1, x2, y2 = canvas.coords(item)
-    move = False 
-
-    if (move == False):         
-        #-------------------------
-        #Cette partie du code pose problème, nous l'avons désactivé pour l'instant 
-        #initialPosition = gameBoardCoordinates[x1,y1,x2,y2]
-        #canvas.move(item,initialPosition,0)
-        pass 
 
 old = [None,None]
 c = 0 
