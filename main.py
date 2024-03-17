@@ -74,25 +74,23 @@ def gameFieldGenerator():
 # Create the game field
 def createGameField(size):
     global gamePiecesPlayer  # Declare gamePiecesPlayer as global at the start of the function
-    global gamePiecesPlayerCoordinates 
 
     padding = 10  # Add padding
     # Calculate the size of the cell depending on the size of the game field
     global cell_size 
     cell_size = (min(canvas_width, canvas_height) - 2 * padding) // (size * 1.5)
 
-    gameBoardPieces = [] 
-    for i in range(0,2):
-            instanceGameBoard = ConceptionBriques(cell_size,canvas)
-            instanceGameBoard.canMovePiece = False 
-            gameBoardPiece = instanceGameBoard.generateGameBoardPieces()
-            for j in gameBoardPiece: 
-                for k in j:
-                    x_offset = 0
-                    canvas.move(j,x_offset,0)
-                    gameBoardPieces.append(gameBoardPiece)
-                    x_offset += 100 
-            
+    for i in range(size):
+        canvas.create_line(480,110+cell_size*i,980,110+cell_size*i)
+        canvas.create_line(480+cell_size*i,110,480+cell_size*i,600)
+
+    #Coordinates for determine the limits of the grid 
+    #For x1 : 480 
+    #For y1 : 110 
+    #For x2 : 480 + cell_size * size 
+    #For y2 : 110 + cell_size * size 
+    canvas.create_rectangle(480,110,480+cell_size*size,110+cell_size*size,outline="blue")
+
     #Instanciation of blocks
     instance = ConceptionBriques(cell_size, canvas)
     blocks = instance.generate_blocks(playerTurn)
