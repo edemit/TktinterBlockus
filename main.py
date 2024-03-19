@@ -59,17 +59,18 @@ class Game:
         # Calculate the size of the cell depending on the size of the game field
         self.cell_size = (min(self.canvas_width, self.canvas_height) - 2 * self.padding) // (self.size * 1.5)
 
-        for i in range(self.size+1):
-            self.canvas.create_line(self.screen_width/3,(self.screen_height/5)+self.cell_size*i,(self.screen_width/1.51),(self.screen_height/5)+self.cell_size*i)
-            #self.canvas.create_line(480+self.cell_size*i,110,480+self.cell_size*i,600)
-            self.canvas.create_line((self.screen_width/3)+self.cell_size*i,self.screen_height/5,(self.screen_width/3)+self.cell_size*i,self.screen_height/1.275)
+        # Calculate relative coordinates for the game field
+        self.x_start = (self.canvas_width - self.cell_size * self.size) / 2
+        self.y_start = (self.canvas_height - self.cell_size * self.size) / 2
+        x_end = self.x_start + self.cell_size * self.size
+        y_end = self.y_start + self.cell_size * self.size
 
-        #Coordinates for determine the limits of the grid 
-        #For x1 : 480 
-        #For y1 : 110 
-        #For x2 : 480 + cell_size * size 
-        #For y2 : 110 + cell_size * size 
-        #self.canvas.create_rectangle(480,110,480+self.cell_size*self.size,110+self.cell_size*self.size,outline="blue")
+        for i in range(self.size+1):
+            y_pos = self.y_start + self.cell_size * i
+            self.canvas.create_line(self.x_start, y_pos, x_end, y_pos)
+
+            x_pos = self.x_start + self.cell_size * i
+            self.canvas.create_line(x_pos, self.y_start, x_pos, y_end)
 
         #Instanciation of blocks
         self.instance = ConceptionBriques(self.cell_size, self.canvas)
@@ -123,8 +124,8 @@ class Game:
             for item in self.current_figure:
                 x1, y1, x2, y2 = self.canvas.coords(item)
                 # Выравниваем координаты по сетке
-                x = round(x1 / self.cell_size) * self.cell_size
-                y = round(y1 / self.cell_size) * self.cell_size
+                x = round((x1 - self.x_start) / self.cell_size) * self.cell_size + self.x_start
+                y = round((y1 - self.y_start) / self.cell_size) * self.cell_size + self.y_start
                 if self.is_in_grid(x, y):
                     # Удаляем старую фигуру
                     self.canvas.delete(item)
@@ -135,7 +136,7 @@ class Game:
                     x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
                     for part in self.current_figure:
                         self.canvas.move(part, self.original_coords[0] - x1, self.original_coords[1] - y1)
-
+                        
     def glisser(self, event):
         # Ваш код для перемещения фигуры
         if self.current_figure is not None:
