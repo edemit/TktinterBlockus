@@ -59,16 +59,17 @@ class Game:
         # Calculate the size of the cell depending on the size of the game field
         self.cell_size = (min(self.canvas_width, self.canvas_height) - 2 * self.padding) // (self.size * 1.5)
 
-        for i in range(self.size):
-            self.canvas.create_line(480,110+self.cell_size*i,980,110+self.cell_size*i)
-            self.canvas.create_line(480+self.cell_size*i,110,480+self.cell_size*i,600)
+        for i in range(self.size+1):
+            self.canvas.create_line(self.screen_width/3,(self.screen_height/5)+self.cell_size*i,(self.screen_width/1.51),(self.screen_height/5)+self.cell_size*i)
+            #self.canvas.create_line(480+self.cell_size*i,110,480+self.cell_size*i,600)
+            self.canvas.create_line((self.screen_width/3)+self.cell_size*i,self.screen_height/5,(self.screen_width/3)+self.cell_size*i,self.screen_height/1.275)
 
         #Coordinates for determine the limits of the grid 
         #For x1 : 480 
         #For y1 : 110 
         #For x2 : 480 + cell_size * size 
         #For y2 : 110 + cell_size * size 
-        self.canvas.create_rectangle(480,110,480+self.cell_size*self.size,110+self.cell_size*self.size,outline="blue")
+        #self.canvas.create_rectangle(480,110,480+self.cell_size*self.size,110+self.cell_size*self.size,outline="blue")
 
         #Instanciation of blocks
         self.instance = ConceptionBriques(self.cell_size, self.canvas)
@@ -115,7 +116,7 @@ class Game:
             self.old[1] = None
             self.canvas.unbind("<Motion>")
             self.deposer(event.x,event.y)
-
+            
     def deposer(self, x, y):
         # Ваш код для размещения фигуры на игровом поле
         if self.current_figure is not None:
@@ -185,64 +186,3 @@ class Game:
 
 game = Game()
 game.run()
-
-
-# Path: ConceptionBriques.py
-# class ConceptionBriques:
-#     def __init__(self, unite, canvas):
-#         self.unite = unite
-#         self.canvas = canvas
-#         self.blocks = []
-#         self.selected_block = None
-#         self.old_coords = None
-#         self.canMovePiece = None 
-
-#     def createRectangle(self, x, y, color):
-#         return self.canvas.create_rectangle(x*self.unite, y*self.unite, (x+1)*self.unite, (y+1)*self.unite, fill=color)
-
-#     def conception(self, coords,color):
-#         self.blocks = [self.createRectangle(x, y, color) for x, y in coords]
-
-#     def generate_blocks(self, playerTurn):
-#         colors = {0: "blue", 1: "red", 2: "green", 3: "yellow"} # Define the colors of the blocks
-#         color = colors[playerTurn] # Define the color of the blocks
-
-#         # Define the shapes of the blocks
-#         shapes = {
-#             "G": [(0, 0), (1, 0), (2, 0), (2, 1)], 
-#             #"cross": [(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)],
-#             #"L": [(0, 0), (0, 1), (0, 2), (1, 2)],
-#             #"L2": [(1, 0), (1, 1), (1, 2), (0, 2)],
-#             #"square": [(0, 0), (0, 1), (1, 0), (1, 1)],
-#             #"stick": [(0, 0), (0, 1), (0, 2), (0, 3)],
-#             #"T": [(0, 0), (1, 0), (2, 0), (1, 1)]
-#         }
-        
-#         blocks = [] # Create a list of blocks
-#         for shape in shapes.values():  # for each shape
-#             self.conception(shape, color) # Create a block
-#             blocks.append(self.blocks) # Add the block to the list of blocks
-#         return blocks # Return the list of blocks
-    
-#     def generateGameBoardPieces(self):
-#         block = []
-#         shape = {"GBP" : [(0, 0), (0, 1), (1, 0), (1, 1)]}
-#         for s in shape.values():
-#             self.conception(s, "white")
-#             block.append(self.blocks)
-#         return block 
-
-
-# Path: Controleur.py
-# class ControleurInput():
-#     def __init__(self):
-#         self.canvas = None
-#         self.selectionFigure = None 
-
-#     def initProperties(self, canvas, fonctionSelection):
-#         self.canvas = canvas
-#         self.selectionFigure = fonctionSelection 
-        
-#     def input(self):
-#         if self.canvas:
-#             self.canvas.bind("<Button-1>", self.selectionFigure)
