@@ -74,7 +74,7 @@ class Game:
 
         #Instanciation of blocks
         self.instance = ConceptionBriques(self.cell_size, self.canvas)
-        self.blocks = self.instance.generate_blocks(self.playerTurn)
+        self.blocks = self.instance.generate_blocks(self.playerTurn,size)
         self.block = []
 
         # Store the blocks in lists 
@@ -82,15 +82,24 @@ class Game:
 
         #Placement of the figures 
         x_offset = 0  # Define x_offset variable
+        y_offset = 0 #Define y_offset variable
         for player in range(1,int(self.numberOfPlayers.get())):
-            player_blocks = self.instance.generate_blocks(player)
+            player_blocks = self.instance.generate_blocks(player,size)
             color = self.colors[player % len(self.colors)]  # выберите цвет
+
+            placementLimit = 5
+
             for block in player_blocks:
                 for item in block:
                     self.canvas.itemconfig(item, fill=color)  # установите цвет
-                    self.canvas.move(item, x_offset, 0)
+                    if player == 0 and x_offset >= placementLimit: #La figure a franchi la limite de sa zone de dépot
+                        x_offset = 0
+                        y_offset = self.screen_height/2
+
+                    self.canvas.move(item, x_offset, y_offset)
                 self.blocks.append(block)  # Добавьте блок в список
                 self.gamePiecesPlayer.append(player_blocks)
+                x_offset += item + self.cell_size
 
     def create_figure(self, cnv, x, y, figure, size=100, fill='red'):
         parts = []
