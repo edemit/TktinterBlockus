@@ -113,24 +113,24 @@ class Game:
                     if int(self.numberOfPlayers.get()) == 2:
                         if player == 1 and x_offset > placementLimit:
                             x_offset = 0
-                            y_offset += item + self.cell_size * 3
+                            y_offset += self.cell_size * 4
                         if player == 2 and x_offset > placementLimit:
                             x_offset = self.screen_width/1.5
-                            y_offset += item + self.cell_size * 3 
+                            y_offset += self.cell_size * 4
 
                     if int(self.numberOfPlayers.get()) >= 3 and int(self.numberOfPlayers.get()) <= 5: 
                         if player == 1 or player == 3:
                             if x_offset > placementLimit:
                                 x_offset = 0
-                                y_offset += item + self.cell_size * 3
+                                y_offset += self.cell_size * 4
                         if player == 2 or player == 4:
                             if x_offset > placementLimit:
                                 x_offset = self.screen_width/1.5
-                                y_offset += item + self.cell_size * 3
-                                
+                                y_offset += self.cell_size * 4 
+
                     self.canvas.move(item, x_offset, y_offset)
                 self.blocks.append(block)  # Добавьте блок в список
-                self.gamePiecesPlayer.append(player_blocks)
+                self.gamePiecesPlayer.append(player_blocks) 
                 x_offset += self.cell_size * 3
             x_offset = 0
             y_offset = 0
