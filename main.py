@@ -12,7 +12,7 @@ class Game:
         self.root.resizable(True, True)
         self.canvas_width = self.screen_width * 0.95
         self.canvas_height = self.screen_height * 0.9
-        self.playerTurn = 1 
+        self.playerTurn = 0 
         self.c = 0 
         self.current_figure = None
         self.old = [None, None]
@@ -74,21 +74,15 @@ class Game:
 
         #Instanciation of blocks
         self.instance = ConceptionBriques(self.cell_size, self.canvas)
-        self.blocks = self.instance.generate_blocks(self.playerTurn,size)
-        self.block = []
 
         # Store the blocks in lists 
         self.gamePiecesPlayer = []
 
         #Placement of the figures 
         x_offset = 0  # Define x_offset variable
-        y_offset = 0 #Define y_offset variable
-        for player in range(1,int(self.numberOfPlayers.get())):
-            player_blocks = self.instance.generate_blocks(player,size)
-            color = self.colors[player % len(self.colors)]  # выберите цвет
-
-            placementLimit = 5
-
+        for player in range(1, int(self.numberOfPlayers.get()) + 1):
+            player_blocks = self.instance.generate_blocks(player)
+            color = self.colors[(player - 1) % len(self.colors)] 
             for block in player_blocks:
                 for item in block:
                     self.canvas.itemconfig(item, fill=color)  # установите цвет
@@ -98,10 +92,11 @@ class Game:
 
                     self.canvas.move(item, x_offset, y_offset)
                 self.blocks.append(block)  # Добавьте блок в список
-                self.gamePiecesPlayer.append(player_blocks)
-                x_offset += item + self.cell_size
-
-    def create_figure(self, cnv, x, y, figure, size=100, fill='red'):
+            self.gamePiecesPlayer.append(player_blocks)
+            
+    def create_figure(self, cnv, x, y, figure, size=100, fill=None):
+        if fill is None:
+            fill = self.colors[self.playerTurn % len(self.colors)]
         parts = []
         for dx, dy in figure:
             part = cnv.create_rectangle(x+dx*size, y+dy*size, x+(dx+1)*size, y+(dy+1)*size, fill=fill)
@@ -145,6 +140,8 @@ class Game:
                     x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
                     for part in self.current_figure:
                         self.canvas.move(part, self.original_coords[0] - x1, self.original_coords[1] - y1)
+            # Переходим к следующему игроку
+            self.playerTurn = (self.playerTurn + 1) % int(self.numberOfPlayers.get())
                         
     def glisser(self, event):
         # Ваш код для перемещения фигуры

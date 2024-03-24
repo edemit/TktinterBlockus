@@ -15,7 +15,7 @@ class ConceptionBriques:
 
     def generate_blocks(self, playerTurn, size):
         colors = {0: "blue", 1: "red", 2: "green", 3: "yellow"} # Define the colors of the blocks
-        color = colors[playerTurn] # Define the color of the blocks
+        color = colors[(playerTurn - 1) % len(colors)]  # Define the color of the blocks
 
         # Define the shapes of the blocks available for different grid sizes
         available_shapes = {
