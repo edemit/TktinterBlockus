@@ -80,19 +80,60 @@ class Game:
 
         #Placement of the figures 
         x_offset = 0  # Define x_offset variable
+        y_offset = 0 #Define y_offset variable 
+        placementLimit = 0 #Define the border for each zone
         for player in range(1, int(self.numberOfPlayers.get()) + 1):
-            player_blocks = self.instance.generate_blocks(player)
+            player_blocks = self.instance.generate_blocks(player,size)
             color = self.colors[(player - 1) % len(self.colors)] 
+
+            if player == 1:
+                x_offset = 0
+                y_offset = 0
+                placementLimit = self.screen_width/4.5
+
+            if player == 2:
+                x_offset = self.screen_width/1.5
+                y_offset = 0
+                placementLimit = self.screen_width/1.2
+
+            if player == 3:
+                x_offset = 0
+                y_offset = self.screen_height/2
+                placementLimit = self.screen_width/4.5
+            
+            if player == 4:
+                x_offset = self.screen_width/1.5
+                y_offset = self.screen_height/2
+                placementLimit = self.screen_width/1.2
+
             for block in player_blocks:
                 for item in block:
                     self.canvas.itemconfig(item, fill=color)  # установите цвет
-                    if player == 0 and x_offset >= placementLimit: #La figure a franchi la limite de sa zone de dépot
-                        x_offset = 0
-                        y_offset = self.screen_height/2
+                    
+                    if int(self.numberOfPlayers.get()) == 2:
+                        if player == 1 and x_offset > placementLimit:
+                            x_offset = 0
+                            y_offset += item + self.cell_size * 3
+                        if player == 2 and x_offset > placementLimit:
+                            x_offset = self.screen_width/1.5
+                            y_offset += item + self.cell_size * 3 
 
+                    if int(self.numberOfPlayers.get()) >= 3 and int(self.numberOfPlayers.get()) <= 5: 
+                        if player == 1 or player == 3:
+                            if x_offset > placementLimit:
+                                x_offset = 0
+                                y_offset += item + self.cell_size * 3
+                        if player == 2 or player == 4:
+                            if x_offset > placementLimit:
+                                x_offset = self.screen_width/1.5
+                                y_offset += item + self.cell_size * 3
+                                
                     self.canvas.move(item, x_offset, y_offset)
                 self.blocks.append(block)  # Добавьте блок в список
-            self.gamePiecesPlayer.append(player_blocks)
+                self.gamePiecesPlayer.append(player_blocks)
+                x_offset += self.cell_size * 3
+            x_offset = 0
+            y_offset = 0
             
     def create_figure(self, cnv, x, y, figure, size=100, fill=None):
         if fill is None:
