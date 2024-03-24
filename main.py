@@ -61,14 +61,12 @@ for i in range(7):
 
 cnv.bind("<Button-1>",clic)
 
-<<<<<<< Updated upstream
-root.mainloop()
-=======
         # Store the blocks in lists 
         self.gamePiecesPlayer = []
 
         #Placement of the figures 
         x_offset = 0  # Define x_offset variable
+
         y_offset = 0 #Define y_offset variable
         for player in range(1,int(self.numberOfPlayers.get())):
             player_blocks = self.instance.generate_blocks(player,size)
@@ -90,6 +88,10 @@ root.mainloop()
             placementLimit0And2 = self.screen_width/4.5
             placementLimit1And3 = self.screen_width/1.2
 
+
+        for player in range(1, int(self.numberOfPlayers.get()) + 1):
+            player_blocks = self.instance.generate_blocks(player,size)
+            color = self.colors[(player - 1) % len(self.colors)] 
             for block in player_blocks:
                 for item in block:
                     self.canvas.itemconfig(item, fill=color)  # установите цвет
@@ -213,4 +215,3 @@ root.mainloop()
 
 game = Game()
 game.run()
->>>>>>> Stashed changes
