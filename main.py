@@ -62,15 +62,15 @@ class Game:
         # Calculate relative coordinates for the game field
         self.x_start = (self.canvas_width - self.cell_size * self.size) / 2
         self.y_start = (self.canvas_height - self.cell_size * self.size) / 2
-        x_end = self.x_start + self.cell_size * self.size
-        y_end = self.y_start + self.cell_size * self.size
+        self.x_end = self.x_start + self.cell_size * self.size
+        self.y_end = self.y_start + self.cell_size * self.size
 
         for i in range(self.size+1):
             y_pos = self.y_start + self.cell_size * i
-            self.canvas.create_line(self.x_start, y_pos, x_end, y_pos)
+            self.canvas.create_line(self.x_start, y_pos, self.x_end, y_pos)
 
             x_pos = self.x_start + self.cell_size * i
-            self.canvas.create_line(x_pos, self.y_start, x_pos, y_end)
+            self.canvas.create_line(x_pos, self.y_start, x_pos, self.y_end)
 
         #Instanciation of blocks
         self.instance = ConceptionBriques(self.cell_size, self.canvas)
@@ -113,23 +113,24 @@ class Game:
                     if int(self.numberOfPlayers.get()) == 2:
                         if player == 1 and x_offset > placementLimit:
                             x_offset = 0
-                            y_offset += self.cell_size * 4
+                            y_offset += self.cell_size * 5
                         if player == 2 and x_offset > placementLimit:
                             x_offset = self.screen_width/1.5
-                            y_offset += self.cell_size * 4
-
+                            y_offset += self.cell_size * 5
+                            
                     if int(self.numberOfPlayers.get()) >= 3 and int(self.numberOfPlayers.get()) <= 5: 
                         if player == 1 or player == 3:
                             if x_offset > placementLimit:
                                 x_offset = 0
-                                y_offset += self.cell_size * 4
+                                y_offset += self.cell_size * 5
                         if player == 2 or player == 4:
                             if x_offset > placementLimit:
                                 x_offset = self.screen_width/1.5
-                                y_offset += self.cell_size * 4 
+                                y_offset += self.cell_size * 5 
 
                     self.canvas.move(item, x_offset, y_offset)
                 self.blocks.append(block)  # Добавьте блок в список
+                self.gamePiecesPlayer.append(player_blocks)
                 self.gamePiecesPlayer.append(player_blocks) 
                 x_offset += self.cell_size * 3
             x_offset = 0
@@ -143,21 +144,29 @@ class Game:
             part = cnv.create_rectangle(x+dx*size, y+dy*size, x+(dx+1)*size, y+(dy+1)*size, fill=fill)
             parts.append(part)
         return parts
-
+    
     def selectionner(self, event):
         # Ваш код для выбора фигуры
         self.c = (self.c + 1) % 2
         if self.c == 1:
             self.item = self.canvas.find_closest(event.x, event.y)
-            self.current_figure = next((block for block in self.blocks if self.item[0] in block), None)  
-            if self.current_figure is not None:
-                x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
-                self.original_coords = (x1, y1)
-                self.current_figure_pattern = [(x1-x, y1-y) for x, y in [(self.canvas.coords(item)[0], self.canvas.coords(item)[1]) for item in self.current_figure]]  # сохраняем шаблон текущей фигуры
-            self.old[0] = event.x
-            self.old[1] = event.y
-            self.canvas.bind("<Motion>",self.glisser)
-        else:
+            currentColor =self.colors[self.playerTurn % len(self.colors)]
+            print(currentColor, end=" ")
+            itemColor = self.canvas.itemcget(self.item, "fill")
+            print(itemColor)
+            if itemColor == currentColor:
+                self.current_figure = next((block for block in self.blocks if self.item[0] in block), None)  
+                if self.current_figure is not None:
+                    x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
+                    self.original_coords = (x1, y1)
+                    self.current_figure_pattern = [(x1-x, y1-y) for x, y in [(self.canvas.coords(item)[0], self.canvas.coords(item)[1]) for item in self.current_figure]]  # сохраняем шаблон текущей фигуры
+                self.old[0] = event.x
+                self.old[1] = event.y
+                self.canvas.bind("<Motion>",self.glisser)
+            else:
+                print("This is not your turn")
+                self.c = 0
+        else: 
             self.old[0] = None
             self.old[1] = None
             self.canvas.unbind("<Motion>")
@@ -193,26 +202,7 @@ class Game:
             self.old[1]=event.y
 
     def is_in_grid(self, x, y):
-        return 480 <= x <= 480 + self.cell_size * self.size and 110 <= y <= 110 + self.cell_size * self.size
-
-    def selectionner(self, event):
-        # Ваш код для выбора фигуры
-        self.c = (self.c + 1) % 2
-        if self.c == 1:
-            self.item = self.canvas.find_closest(event.x, event.y)
-            self.current_figure = next((block for block in self.blocks if self.item[0] in block), None)  
-            if self.current_figure is not None:
-                x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
-                self.original_coords = (x1, y1)
-                self.current_figure_pattern = [(x1-x, y1-y) for x, y in [(self.canvas.coords(item)[0], self.canvas.coords(item)[1]) for item in self.current_figure]]  # сохраняем шаблон текущей фигуры
-            self.old[0] = event.x
-            self.old[1] = event.y
-            self.canvas.bind("<Motion>",self.glisser)
-        else:
-            self.old[0] = None
-            self.old[1] = None
-            self.canvas.unbind("<Motion>")
-            self.deposer(event.x,event.y)
+        return self.x_start <= x <= self.x_end + self.cell_size * self.size and self.y_start <= y <= self.y_end  + self.cell_size * self.size
 
     def startGame(self):
         # Ваш код для начала игры
