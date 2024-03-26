@@ -55,6 +55,7 @@ class Game:
 
     def createGameField(self, size):
         self.size = size
+        self.board = [[-1 for _ in range(size)] for _ in range(size)]  # Create a game field
         self.padding = 10  # Add padding
         # Calculate the size of the cell depending on the size of the game field
         self.cell_size = (min(self.canvas_width, self.canvas_height) - 2 * self.padding) // (self.size * 1.5)
@@ -86,25 +87,14 @@ class Game:
             player_blocks = self.instance.generate_blocks(player,size)
             color = self.colors[(player - 1) % len(self.colors)] 
 
-            if player == 1:
-                x_offset = 0
-                y_offset = 0
-                placementLimit = self.screen_width/4.5
+            player_offsets = [
+                (0, 0, self.screen_width/4.5),  # player 1
+                (self.screen_width/1.5, 0, self.screen_width/1.2),  # player 2
+                (0, self.screen_height/2, self.screen_width/4.5),  # player 3
+                (self.screen_width/1.5, self.screen_height/2, self.screen_width/1.2)  # player 4
+            ]
 
-            if player == 2:
-                x_offset = self.screen_width/1.5
-                y_offset = 0
-                placementLimit = self.screen_width/1.2
-
-            if player == 3:
-                x_offset = 0
-                y_offset = self.screen_height/2
-                placementLimit = self.screen_width/4.5
-            
-            if player == 4:
-                x_offset = self.screen_width/1.5
-                y_offset = self.screen_height/2
-                placementLimit = self.screen_width/1.2
+            x_offset, y_offset, placementLimit = player_offsets[player-1]
 
             for block in player_blocks:
                 for item in block:
@@ -181,17 +171,24 @@ class Game:
                 x = round((x1 - self.x_start) / self.cell_size) * self.cell_size + self.x_start
                 y = round((y1 - self.y_start) / self.cell_size) * self.cell_size + self.y_start
                 if self.is_in_grid(x, y):
-                    # Удаляем старую фигуру
+                    # Delete the figure from the list of blocks
                     self.canvas.delete(item)
-                    # Создаем новую фигуру на игровом поле
+                    # Create a new figure
                     self.current_figure = self.create_figure(self.canvas, x, y, self.current_figure_pattern, self.cell_size)
-                else:
-                    # Возвращаем фигуру на исходное место
-                    x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
-                    for part in self.current_figure:
-                        self.canvas.move(part, self.original_coords[0] - x1, self.original_coords[1] - y1)
-            # Переходим к следующему игроку
-            self.playerTurn = (self.playerTurn + 1) % int(self.numberOfPlayers.get())
+                    # Fill the board with the current player's number
+                    for item in self.current_figure:
+                        x1, y1, x2, y2 = self.canvas.coords(item)
+                        x1 = round((x1 - self.x_start) / self.cell_size)
+                        y1 = round((y1 - self.y_start) / self.cell_size)
+                        # self.board[y1][x1] = self.playerTurn    
+            print(self.board)
+        else:
+            # Возвращаем фигуру на исходное место
+            x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
+            for part in self.current_figure:
+                self.canvas.move(part, self.original_coords[0] - x1, self.original_coords[1] - y1)
+        # Переходим к следующему игроку
+        self.playerTurn = (self.playerTurn + 1) % int(self.numberOfPlayers.get())
                         
     def glisser(self, event):
         # Ваш код для перемещения фигуры
@@ -202,7 +199,13 @@ class Game:
             self.old[1]=event.y
 
     def is_in_grid(self, x, y):
-        return self.x_start <= x <= self.x_end + self.cell_size * self.size and self.y_start <= y <= self.y_end  + self.cell_size * self.size
+        for item in self.current_figure:
+            x1, y1, x2, y2 = self.canvas.coords(item)
+            x1 = round((x1 - self.x_start) / self.cell_size)
+            y1 = round((y1 - self.y_start) / self.cell_size)
+            if 0 <= y1 < len(self.board) and 0 <= x1 < len(self.board[0]) and self.board[y1][x1] != -1:
+                return False
+        return True     
 
     def startGame(self):
         # Ваш код для начала игры

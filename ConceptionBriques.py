@@ -19,7 +19,8 @@ class ConceptionBriques:
         # Define the shapes of the blocks available for different grid sizes
         available_shapes = {
             5: ["square","stick"],
-            12 : ["square","stick","L","cross","T"]
+            12 : ["square","stick","L","cross","T", "block"],
+            20 : ["square","stick","L","cross","T", "block"]
             # Add more grid sizes and corresponding available shapes as needed
         }
 
@@ -28,6 +29,7 @@ class ConceptionBriques:
 
         # Define the shapes of the blocks
         shapes = {
+            "block": [(0, 0)],
             "G": [(0, 0), (1, 0), (2, 0), (2, 1)],
             "cross": [(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)],
             "L": [(0, 0), (0, 1), (0, 2), (1, 2)],
