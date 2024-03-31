@@ -203,9 +203,13 @@ class Game:
             x1, y1, x2, y2 = self.canvas.coords(item)
             x1 = round((x1 - self.x_start) / self.cell_size)
             y1 = round((y1 - self.y_start) / self.cell_size)
-            if 0 <= y1 < len(self.board) and 0 <= x1 < len(self.board[0]) and self.board[y1][x1] != -1:
+            # check if the figure is in the grid
+            if not (0 <= y1 < len(self.board) and 0 <= x1 < len(self.board[0])):
                 return False
-        return True     
+            # check if the cell is empty
+            if self.board[y1][x1] != -1:
+                return False
+        return True   
 
     def startGame(self):
         # Ваш код для начала игры
