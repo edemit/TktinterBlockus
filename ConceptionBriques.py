@@ -20,7 +20,7 @@ class ConceptionBriques:
         available_shapes = {
             5: ["square","stick"],
             12 : ["square","stick","L","cross","T", "block"],
-            20 : ["square","stick","L","cross","T", "block"]
+            20 : ["square","stick","L","cross","T", "block","G","L2"]
             # Add more grid sizes and corresponding available shapes as needed
         }
 
