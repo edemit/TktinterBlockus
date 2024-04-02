@@ -21,12 +21,12 @@ class ControleurInput():
         self.canvas_width = self.screen_width * 0.95
         self.canvas_height = self.screen_height * 0.9 
         self.colors = ['red', 'blue', 'green', 'yellow']
-        self.canvas = tkinter.Canvas(self.root, width=self.canvas_width, height=self.canvas_height, scrollregion=(0,0,self.canvas_width,self.canvas_height), bg='green')
+        self.canvas = tkinter.Canvas(self.root, width=self.canvas_width, height=self.canvas_height, scrollregion=(0,0,self.canvas_width,self.canvas_height), bg='white')
         self.canvas.place(relx=0.5, rely=0.5, anchor='center')
         self.canvas.pack(expand=True)
         #Controleur 
         self.input()
-        self.gameFieldGenerator()  
+        self.gameFieldGenerator()
 
     def input(self):
         if self.canvas:
@@ -58,7 +58,7 @@ class ControleurInput():
             self.old[1] = None
             self.canvas.unbind("<Motion>")
             self.deposer(event.x,event.y)
-            
+
     def deposer(self, x, y):
         # Ваш код для размещения фигуры на игровом поле
         if self.current_figure is not None:
@@ -97,10 +97,20 @@ class ControleurInput():
             x1, y1, x2, y2 = self.canvas.coords(item)
             x1 = round((x1 - self.vueScript.x_start) / self.vueScript.cell_size)
             y1 = round((y1 - self.vueScript.y_start) / self.vueScript.cell_size)
-            if 0 <= y1 < len(self.vueScript.board) and 0 <= x1 < len(self.vueScript.board[0]) and self.vueScript.board[y1][x1] != -1:
+            # check if the figure is in the grid
+            if not (0 <= y1 < len(self.vueScript.board) and 0 <= x1 < len(self.vueScript.board[0])):
                 return False
-        return True  
+            # check if the cell is empty
+            if self.vueScript.board[y1][x1] != -1:
+                return False
+        return True
     
+    #Lancement nouvelle partie 
+    def relaunchGame(self):
+        self.playerTurn = 0 
+        self.points = [0,0,0,0]
+        self.gameFieldGenerator()
+
     def gameFieldGenerator(self):
         # Ваш код для создания окна генератора игрового поля
         self.gameFieldWindow = tkinter.Toplevel(self.root)

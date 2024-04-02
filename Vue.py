@@ -33,7 +33,7 @@ class Interface():
         y_offset = 0 #Define y_offset variable 
         placementLimit = 0 #Define the border for each zone
         for player in range(1, int(nbPlayers.get()) + 1):
-            player_blocks = self.instance.generate_blocks(player,size)
+            player_blocks = self.instance.generate_blocks(player, nbPlayers, size)
             color = colors[(player - 1) % len(colors)] 
 
             player_offsets = [
