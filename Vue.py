@@ -83,7 +83,7 @@ class Interface():
             part = canvas.create_rectangle(x+dx*size, y+dy*size, x+(dx+1)*size, y+(dy+1)*size, fill=fill)
             parts.append(part)
         return parts
-
+    
     def deposeFigure(self, figure, canvas, playerTurn):
         # Fill the board with the current player's number
         for item in figure: 
@@ -91,3 +91,15 @@ class Interface():
             x1 = round((x1 - self.x_start) / self.cell_size)
             y1 = round((y1 - self.y_start) / self.cell_size)
             self.board[y1][x1] = playerTurn 
+            
+    def displayScore(self, canvas, playersScoreLabels, screenWidth, screenHeight):
+        x = screenWidth/2.8
+        y = screenHeight/1.25 
+        for i in range(0,len(playersScoreLabels)):
+            canvas.create_window(x,y,window=playersScoreLabels[i])
+            if i == 0 or i == 2:
+                y += screenHeight/12.5
+            elif i == 1 or i == 3:
+                y = screenHeight/1.25 
+                x += screenWidth/6 
+            print("here")

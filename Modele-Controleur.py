@@ -1,4 +1,5 @@
-import tkinter 
+import tkinter
+from tkinter import *  
 from Vue import Interface
 
 class ControleurInput():
@@ -24,8 +25,13 @@ class ControleurInput():
         self.canvas = tkinter.Canvas(self.root, width=self.canvas_width, height=self.canvas_height, scrollregion=(0,0,self.canvas_width,self.canvas_height), bg='white')
         self.canvas.place(relx=0.5, rely=0.5, anchor='center')
         self.canvas.pack(expand=True)
+        self.player1ScoreLabel = tkinter.Label(self.root, text="Score joueur 1 : ", font=("Arial", 15))
+        self.player2ScoreLabel = tkinter.Label(self.root, text="Score joueur 2 : ", font=("Arial", 15))
+        self.player3ScoreLabel = tkinter.Label(self.root, text="Score joueur 3 : ", font=("Arial", 15))
+        self.player4ScoreLabel = tkinter.Label(self.root, text="Score joueur 4 : ", font=("Arial", 15))
+        self.playersScoreLabels = [self.player1ScoreLabel, self.player2ScoreLabel, self.player3ScoreLabel, self.player4ScoreLabel]
         #Controleur 
-        self.input()
+        self.input() 
         self.gameFieldGenerator()
 
     def input(self):
@@ -65,15 +71,15 @@ class ControleurInput():
             for item in self.current_figure:
                 x1, y1, x2, y2 = self.canvas.coords(item)
                 # Выравниваем координаты по сетке
-                x = round((x1 - self.vueScript.x_start) / self.vueScript.cell_size) * self.vueScript.cell_size + self.vueScript.x_start
-                y = round((y1 - self.vueScript.y_start) / self.vueScript.cell_size) * self.vueScript.cell_size + self.vueScript.y_start
+                x = (round((x1 - self.vueScript.x_start) / self.vueScript.cell_size) * self.vueScript.cell_size) + self.vueScript.x_start
+                y = (round((y1 - self.vueScript.y_start) / self.vueScript.cell_size) * self.vueScript.cell_size) + self.vueScript.y_start
                 if self.is_in_grid(x, y):
                     self.points[self.playerTurn] += 1
                     print(self.playerTurn, " : ", self.points[self.playerTurn])
                     # Delete the figure from the list of blocks
                     self.canvas.delete(item)
                     # Create a new figure
-                    self.current_figure = self.vueScript.create_figure(self.canvas, x, y, self.size, self.current_figure_pattern, self.colors, self.playerTurn, fill=None)
+                    self.current_figure = self.vueScript.create_figure(self.canvas, x, y, self.vueScript.cell_size, self.current_figure_pattern, self.colors, self.playerTurn, fill=None)
                     self.vueScript.deposeFigure(self.current_figure, self.canvas, self.playerTurn)
                 print(self.vueScript.board)
         else:
@@ -153,8 +159,10 @@ class ControleurInput():
         #Create the game field 
         self.vueScript.createGameField(self.size,self.canvas,self.canvas_width,self.canvas_height,self.numberOfPlayers,self.colors,self.screen_width,self.screen_height,self.blocks)
 
+        self.vueScript.displayScore(self.canvas, self.playersScoreLabels, self.screen_width, self.screen_height) 
+
     def run(self):
         self.root.mainloop()
-        
+
 controleur = ControleurInput()
 controleur.run()   
