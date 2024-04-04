@@ -39,7 +39,6 @@ class ControleurInput():
             self.canvas.bind("<Button-1>", self.selectionner)
             
     def selectionner(self, event):
-        # Ваш код для выбора фигуры
         self.c = (self.c + 1) % 2
         if self.c == 1:
             item = self.canvas.find_closest(event.x, event.y)
@@ -52,7 +51,7 @@ class ControleurInput():
                 if self.current_figure is not None:
                     x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
                     self.original_coords = (x1, y1)
-                    self.current_figure_pattern = [(x1-x, y1-y) for x, y in [(self.canvas.coords(item)[0], self.canvas.coords(item)[1]) for item in self.current_figure]]  # сохраняем шаблон текущей фигуры
+                    self.current_figure_pattern = [(x1-x, y1-y) for x, y in [(self.canvas.coords(item)[0], self.canvas.coords(item)[1]) for item in self.current_figure]]
                 self.old[0] = event.x
                 self.old[1] = event.y
                 self.canvas.bind("<Motion>",self.glisser)
@@ -66,29 +65,34 @@ class ControleurInput():
             self.deposer(event.x,event.y)
 
     def deposer(self, x, y):
-        # Ваш код для размещения фигуры на игровом поле
         if self.current_figure is not None:
+            # Calculate the new coordinates of the figure based on the grid
+            new_figure = []
             for item in self.current_figure:
                 x1, y1, x2, y2 = self.canvas.coords(item)
-                # Выравниваем координаты по сетке
                 x = (round((x1 - self.vueScript.x_start) / self.vueScript.cell_size) * self.vueScript.cell_size) + self.vueScript.x_start
                 y = (round((y1 - self.vueScript.y_start) / self.vueScript.cell_size) * self.vueScript.cell_size) + self.vueScript.y_start
-                if self.is_in_grid(x, y):
-                    self.points[self.playerTurn] += 1
-                    print(self.playerTurn, " : ", self.points[self.playerTurn])
-                    # Delete the figure from the list of blocks
+                new_figure.append((x, y))
+            # Check if the figure can be placed on the board
+            if all(self.is_in_grid(x, y) for x, y in new_figure):
+                self.points[self.playerTurn] += 1
+                print(self.playerTurn, " : ", self.points[self.playerTurn])
+                # Delete the figure from the list of blocks
+                for item in self.current_figure:
                     self.canvas.delete(item)
-                    # Create a new figure
-                    self.current_figure = self.vueScript.create_figure(self.canvas, x, y, self.vueScript.cell_size, self.current_figure_pattern, self.colors, self.playerTurn, fill=None)
-                    self.vueScript.deposeFigure(self.current_figure, self.canvas, self.playerTurn)
+                # Create a new figure
+                self.current_figure = [self.vueScript.create_figure(self.canvas, x, y, self.vueScript.cell_size, self.current_figure_pattern, self.colors, self.playerTurn, fill=None) for x, y in new_figure]
+                for figure in self.current_figure:
+                    self.vueScript.deposeFigure(figure, self.canvas, self.playerTurn)
+                #  Change the player's turn
+                self.playerTurn = (self.playerTurn + 1) % int(self.numberOfPlayers.get())
                 print(self.vueScript.board)
-        else:
-            # Возвращаем фигуру на исходное место
-            x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
-            for part in self.current_figure:
-                self.canvas.move(part, self.original_coords[0] - x1, self.original_coords[1] - y1)
-        # Переходим к следующему игроку
-        self.playerTurn = (self.playerTurn + 1) % int(self.numberOfPlayers.get())
+            else:
+                # Move the figure back to its original position
+                x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
+                for part in self.current_figure:
+                    self.canvas.move(part, self.original_coords[0] - x1, self.original_coords[1] - y1)
+        
 
     def glisser(self, event):
         # Ваш код для перемещения фигуры
