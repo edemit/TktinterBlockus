@@ -98,14 +98,18 @@ class Interface():
                 return False
             self.board[y1][x1] = playerTurn 
             
-    def displayScore(self, canvas, playersScoreLabels, screenWidth, screenHeight):
+    def displayScore(self, canvas, playersScoreLabels, playersScoreLabelsTexts, screenWidth, screenHeight, onlyUpdateDisplay):
         x = screenWidth/2.8
         y = screenHeight/1.25 
         for i in range(0,len(playersScoreLabels)):
-            canvas.create_window(x,y,window=playersScoreLabels[i])
+            if onlyUpdateDisplay == False:
+                canvas.create_window(x,y,window=playersScoreLabels[i])
+            x += screenWidth/14
+            canvas.create_window(x,y,window=playersScoreLabelsTexts[i])
+            x -= screenWidth/14 
+
             if i == 0 or i == 2:
                 y += screenHeight/12.5
             elif i == 1 or i == 3:
-                y = screenHeight/1.25 
                 x += screenWidth/6 
-            print("here")
+                y = screenHeight/1.25  

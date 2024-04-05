@@ -30,6 +30,17 @@ class ControleurInput():
         self.player3ScoreLabel = tkinter.Label(self.root, text="Score joueur 3 : ", font=("Arial", 15))
         self.player4ScoreLabel = tkinter.Label(self.root, text="Score joueur 4 : ", font=("Arial", 15))
         self.playersScoreLabels = [self.player1ScoreLabel, self.player2ScoreLabel, self.player3ScoreLabel, self.player4ScoreLabel]
+        self.player1ScoreText = tkinter.StringVar(self.root, self.points[0])
+        self.player2ScoreText = tkinter.StringVar(self.root, self.points[1])
+        self.player3ScoreText = tkinter.StringVar(self.root, self.points[2])
+        self.player4ScoreText = tkinter.StringVar(self.root, self.points[3])
+        self.playerScoreText = [self.player1ScoreText, self.player2ScoreText, self.player3ScoreText, self.player4ScoreText]
+        self.player1ScoreLabelText = tkinter.Label(self.root, textvariable=self.player1ScoreText, font=("Arial", 15))
+        self.player2ScoreLabelText = tkinter.Label(self.root, textvariable=self.player2ScoreText, font=("Arial", 15))
+        self.player3ScoreLabelText = tkinter.Label(self.root, textvariable=self.player3ScoreText, font=("Arial", 15))
+        self.player4ScoreLabelText = tkinter.Label(self.root, textvariable=self.player4ScoreText, font=("Arial", 15))
+        self.playersScoreLabelsTexts = [self.player1ScoreLabelText, self.player2ScoreLabelText, self.player3ScoreLabelText, self.player4ScoreLabelText]
+
         #Controleur 
         self.input() 
         self.gameFieldGenerator()
@@ -75,10 +86,12 @@ class ControleurInput():
                 new_figure.append((x, y))
             # Check if the figure can be placed on the board
             if all(self.is_in_grid(x, y) for x, y in new_figure):
-                self.points[self.playerTurn] += 1
-                print(self.playerTurn, " : ", self.points[self.playerTurn])
-                # Delete the figure from the list of blocks
                 for item in self.current_figure:
+                    #Update score 
+                    self.points[self.playerTurn] += 1 
+                    self.playerScoreText[self.playerTurn].set(self.points[self.playerTurn])
+                    
+                    #Delete the figure from the list of blocks
                     self.canvas.delete(item)
                 # Create a new figure
                 self.current_figure = [self.vueScript.create_figure(self.canvas, x, y, self.vueScript.cell_size, self.current_figure_pattern, self.colors, self.playerTurn, fill=None) for x, y in new_figure]
@@ -86,13 +99,12 @@ class ControleurInput():
                     self.vueScript.deposeFigure(figure, self.canvas, self.playerTurn)
                 #  Change the player's turn
                 self.playerTurn = (self.playerTurn + 1) % int(self.numberOfPlayers.get())
-                print(self.vueScript.board)
             else:
                 # Move the figure back to its original position
                 x1, y1, x2, y2 = self.canvas.coords(self.current_figure[0])
                 for part in self.current_figure:
                     self.canvas.move(part, self.original_coords[0] - x1, self.original_coords[1] - y1)
-        
+                self.vueScript.displayScore(self.canvas, self.playersScoreLabels[:self.players], self.playersScoreLabelsTexts[:self.players], self.screen_width, self.screen_height, True) 
 
     def glisser(self, event):
         # Ваш код для перемещения фигуры
@@ -163,7 +175,7 @@ class ControleurInput():
         #Create the game field 
         self.vueScript.createGameField(self.size,self.canvas,self.canvas_width,self.canvas_height,self.numberOfPlayers,self.colors,self.screen_width,self.screen_height,self.blocks)
 
-        self.vueScript.displayScore(self.canvas, self.playersScoreLabels, self.screen_width, self.screen_height) 
+        self.vueScript.displayScore(self.canvas, self.playersScoreLabels[:self.players], self.playersScoreLabelsTexts[:self.players], self.screen_width, self.screen_height, False) 
 
     def run(self):
         self.root.mainloop()
