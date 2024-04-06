@@ -47,7 +47,7 @@ class Interface():
 
             for block in player_blocks:
                 for item in block:
-                    canvas.itemconfig(item, fill=color)  # установите цвет
+                    canvas.itemconfig(item, fill=color) 
                     
                     if int(nbPlayers.get()) == 2:
                         if player == 1 and x_offset > placementLimit:
@@ -68,7 +68,7 @@ class Interface():
                                 y_offset += self.cell_size * 5 
 
                     canvas.move(item, x_offset, y_offset)
-                blocks.append(block)  # Добавьте блок в список
+                blocks.append(block)
                 self.gamePiecesPlayer.append(player_blocks)
                 self.gamePiecesPlayer.append(player_blocks) 
                 x_offset += self.cell_size * 3
