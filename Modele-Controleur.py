@@ -165,7 +165,7 @@ class ControleurInput():
         self.gameFieldWindow = tkinter.Toplevel(self.root)
         self.gameFieldWindow.title("Game field generator")
         self.gameFieldWindow.geometry("300x200")
-
+        
         # List of possible board sizes
         boardSizes = [str(i) for i in range(5, 21)]  # 5x5, 6x6, 7x7, ..., 20x20
         self.boardSize = tkinter.StringVar(self.gameFieldWindow)
