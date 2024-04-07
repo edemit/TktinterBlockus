@@ -46,8 +46,7 @@ class ModeleControleur():
         self.player3ScoreLabelText = tkinter.Label(self.root, textvariable=self.player3ScoreText, font=("Arial", 15))
         self.player4ScoreLabelText = tkinter.Label(self.root, textvariable=self.player4ScoreText, font=("Arial", 15))
         self.playersScoreLabelsTexts = [self.player1ScoreLabelText, self.player2ScoreLabelText, self.player3ScoreLabelText, self.player4ScoreLabelText]
-
-        #Controleur 
+        
         #mets en place la gestion de l'input de selection
         self.input() 
 
@@ -157,8 +156,6 @@ class ModeleControleur():
         for i, coords in enumerate(self.available_coords[self.playerTurn]):
             if self.vueScript.board[coords[1]][coords[0]] != -1:
                 del self.available_coords[self.playerTurn][i]
-        
-         # Add new available coordinates
 
          #re initialise la matrice avec les nouveaux coordonnées disponibles (donc la liste des cases du plateau de jeu vides)
         for item in self.current_figure:
@@ -183,8 +180,7 @@ class ModeleControleur():
         tkinter.Button(end_game_window, text="Relaunch", command=self.relaunchGame).pack()
         #affiche un bouton indiquant qu'une partie à été relancé 
         tkinter.Button(end_game_window, text="OK", command=end_game_window.destroy).pack()
-    
-    # Relaunch the game
+
     def relaunchGame(self):
         self.playerTurn = 0 
         #réinitialisation des variables servant à gérer les données de gameplay 
