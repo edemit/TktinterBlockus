@@ -1,18 +1,14 @@
-import tkinter
 from ConceptionPieces import ConceptionPieces  
 
 class Interface():
     def createGameField(self, size, canvas, canvasWidth, canvasHeight, nbPlayers, colors, screenWidth, screenHeight, blocks):
-        self.size = size
-        self.board = [[-1 for _ in range(size)] for _ in range(size)]  # Create a game field
-        self.padding = 10  # Add padding
         self.size = size #récupère la taille du plateau de jeu 
         self.board = [[-1 for _ in range(size)] for _ in range(size)] #crée le plateau de jeu 
         self.padding = 10  #ajoute du padding 
-        # Calculate the size of the cell depending on the size of the game field
+        
+        #calcule la taille d'une case du plateau de jeu par rapport à la taille de la fenêtre 
         self.cell_size = (min(canvasWidth, canvasHeight) - 2 * self.padding) // (self.size * 1.5)
 
-        # Calculate relative coordinates for the game field
         #calcul les coordonnées correspondants pour le plateau de jeu 
         self.x_start = (canvasWidth - self.cell_size * self.size) / 2
         self.y_start = (canvasHeight - self.cell_size * self.size) / 2
