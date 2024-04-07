@@ -30,7 +30,7 @@ class ConceptionPieces:
             9: ["square","stick","L","cross"],
             10: ["square","stick","L","cross"],
             11: ["square","stick","L","cross","T"],
-            12 : ["block","block","square","stick","L","cross","T","4"],
+            12 : ["block","block","square","stick","L","cross","T","z"],
             13 : ["square","stick","L","cross","T","block"],
             14 : ["square","stick","L","cross","T","block"],
             15 : ["square","stick","L","cross","T","block","G"],
@@ -69,6 +69,8 @@ class ConceptionPieces:
             "M": [(0, 0), (0, 1), (1, 1), (1, 2), (2, 2)],
             "lightning": [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
             "4": [(0, 0), (0, 1), (1, 1), (2, 1), (1, 2)],
+            "p": [(0, 0), (0, 1), (1, 1), (0, 2)],
+            "z": [(0, 0), (1, 0), (1, 1), (2, 1)],
         }
         
         #creates a list of figures
