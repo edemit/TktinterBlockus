@@ -4,7 +4,10 @@ from ConceptionBriques import ConceptionBriques
 class Interface():
     def createGameField(self, size, canvas, canvasWidth, canvasHeight, nbPlayers, colors, screenWidth, screenHeight, blocks):
         self.size = size
-        self.board = [[-1 for _ in range(size)] for _ in range(size)]  # Create a game field
+        # Initialize the board with -1 (empty cells)
+        self.board = [[-1 for _ in range(self.size)] for _ in range(self.size)]
+        # Set the starting positions for each player to -2
+        self.board[0][0] = self.board[0][self.size-1] = self.board[self.size-1][0] = self.board[self.size-1][self.size-1] = -2
         self.padding = 10  # Add padding
         # Calculate the size of the cell depending on the size of the game field
         self.cell_size = (min(canvasWidth, canvasHeight) - 2 * self.padding) // (self.size * 1.5)
