@@ -101,11 +101,8 @@ class ModeleControleur():
             self.deposer(event.x,event.y)
     
     def show_board(self):
-        for y, row in enumerate(self.vueScript.board):
-            for x, cell in enumerate(row):
-                x_pixel = x * self.vueScript.cell_size + self.vueScript.x_start
-                y_pixel = y * self.vueScript.cell_size + self.vueScript.y_start
-                print(f"Cell ({x}, {y}) at pixels ({x_pixel}, {y_pixel}): {cell}")
+        for row in self.vueScript.board:
+            print(row)
 
     def deposer(self, x, y):
         print(f"Trying to place figure at ({x}, {y})")
@@ -114,10 +111,8 @@ class ModeleControleur():
             new_figure = []
             for item in self.current_figure:
                 x1, y1, x2, y2 = self.canvas.coords(item)
-                x_center = (x1 + x2) / 2
-                y_center = (y1 + y2) / 2
-                x = round((x_center - self.vueScript.x_start) / self.vueScript.cell_size) * self.vueScript.cell_size + self.vueScript.x_start
-                y = round((y_center - self.vueScript.y_start) / self.vueScript.cell_size) * self.vueScript.cell_size + self.vueScript.y_start
+                x = (round((x1 - self.vueScript.x_start) / self.vueScript.cell_size) * self.vueScript.cell_size) + self.vueScript.x_start
+                y = (round((y1 - self.vueScript.y_start) / self.vueScript.cell_size) * self.vueScript.cell_size) + self.vueScript.y_start
                 new_figure.append((x, y))
                 print(f"New figure coordinates: {new_figure}")
             # Check if the figure can be placed on the board
@@ -162,7 +157,7 @@ class ModeleControleur():
                     self.canvas.move(part, self.original_coords[0] - x1, self.original_coords[1] - y1)
                 self.vueScript.displayScore(self.canvas, self.playersScoreLabels[:self.players], self.playersScoreLabelsTexts[:self.players], self.screen_width, self.screen_height, True) 
 
-            self.show_board()
+            # self.show_board()
             self.check_end_game()
             # After a successful move, go to the next turn
             
@@ -210,19 +205,16 @@ class ModeleControleur():
         if self.vueScript.board[y][x] not in [-1, -2]:
             print(f"Cell at ({x}, {y}) is not empty and available")
             return False
-        # Check all corners of the block
-        for dx, dy in [(-1, -1), (1, -1), (-1, 1), (1, 1)]:
-            corner_x = x + dx
-            corner_y = y + dy
-            if (0 <= corner_y < len(self.vueScript.board) and 0 <= corner_x < len(self.vueScript.board[0]) and
-                self.vueScript.board[corner_y][corner_x] == -2):
-                return True
-        print(f"None of the corners of the block at ({x}, {y}) is on a cell with number '-2'")
-        # Check if the block is on a cell with number "-2"
-        if self.vueScript.board[y][x] == -2:
-            return True
-        print(f"Block at ({x}, {y}) is not on a cell with number '-2'")
-        return False
+        # Check all blocks of the figure
+        for block in self.current_figure:
+            x1, y1, x2, y2 = self.canvas.coords(block)
+            x1 = round((x1 - self.vueScript.x_start) / self.vueScript.cell_size)
+            y1 = round((y1 - self.vueScript.y_start) / self.vueScript.cell_size)
+            # Check if the block is on a cell with number "-2"
+            if self.vueScript.board[y1][x1] != -2:
+                print(f"Block at ({x1}, {y1}) is not on a cell with number '-2'")
+                return False
+        return True
         
     def update_available_coords(self):
         #deletes used coordinates  

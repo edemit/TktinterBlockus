@@ -30,7 +30,7 @@ class ConceptionPieces:
             9: ["square","stick","L","cross"],
             10: ["square","stick","L","cross"],
             11: ["square","stick","L","cross","T"],
-            12 : ["block","square","stick","L","cross","T"],
+            12 : ["block","block","square","stick","L","cross","T"],
             13 : ["square","stick","L","cross","T","block"],
             14 : ["square","stick","L","cross","T","block"],
             15 : ["square","stick","L","cross","T","block","G"],
