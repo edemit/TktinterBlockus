@@ -47,7 +47,7 @@ class Interface():
                 (0, 0, screenWidth/4),  # player 1
                 (screenWidth/1.5, 0, screenWidth/1.2),  # player 2
                 (0, screenHeight/2, screenWidth/4),  # player 3
-                (screenWidth/1.5, screenHeight/2, screenWidth/1.2)  # player 4
+                (screenWidth/1.5, screenHeight/2, screenWidth/1.2),  # player 4
                 (0, 0, screenWidth/4),  #joueur 1
                 (screenWidth/1.5, 0, screenWidth/1.2),  #joueur 2 
                 (0, screenHeight/2, screenWidth/4), #joueur 3 
