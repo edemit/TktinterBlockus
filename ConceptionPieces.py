@@ -1,6 +1,6 @@
 class ConceptionPieces:
     def __init__(self, unite, canvas):
-        #variable de création des pièces 
+        #Figure creation variables
         self.unite = unite
         self.canvas = canvas
         self.blocks = []
@@ -8,20 +8,20 @@ class ConceptionPieces:
         self.old_coords = None
 
     def createRectangle(self, x, y, color):
-        #crée un rectangle de longueur déterminée par la taille des cases du plateau de jeu 
+        #creates a rectangle whose length is determined by the size of the squares on the board 
         return self.canvas.create_rectangle(x*self.unite, y*self.unite, (x+1)*self.unite, (y+1)*self.unite, fill=color)
     
     def conception(self, coords, color):
-        #appelle la fonction de creation de rectangle 
+        #call the rectangle creation function 
         self.blocks = [self.createRectangle(x, y, color) for x, y in coords]
 
     def generate_blocks(self, playerTurn, nbPlayers, size):
-        #définit les couleurs des blocs parmi une liste des couleurs disponible 
+        #defines block colors from a list of available colors 
         colors = {0: "blue", 1: "red", 2: "green", 3: "yellow"}
-        #définit la couleur a appliquer à la pièce, par rapport à la couleur correspondante au joueur dont la pièce est attribuée 
+        #defines the color to be applied to the figure, in relation to the color corresponding to the player whose figure is assigned 
         color = colors[(playerTurn - 1) % len(colors)] 
         
-        #définit les formes des pièces disponibles pour chaque taille du plateau de jeu 
+        #defines the shapes of the figures available for each board size 
         availableShapes = {
             5: ["square","stick"],
             6: ["square","stick"],
@@ -41,14 +41,14 @@ class ConceptionPieces:
             20 : ["square","stick","L","cross","T", "block","G","L2"]
         }
 
-        #réduit le nombre de pièces par joueur en fonction du nombre de joueurs 
+        #reduces the number of figures per player according to the number of players 
         if int(nbPlayers.get()) > 2 and int(nbPlayers.get()) <= 4:
             availableShapesForSize = availableShapes.get(size - (int(nbPlayers.get())-2), [])
             print(int(nbPlayers.get())-2)
         else: 
             availableShapesForSize = availableShapes.get(size, [])
 
-        #définit la forme de chaque pièce 
+        #defines the shape of each part 
         shapes = {
             "block": [(0, 0)],
             "G": [(0, 0), (1, 0), (2, 0), (2, 1)],
@@ -60,16 +60,16 @@ class ConceptionPieces:
             "T": [(0, 0), (1, 0), (2, 0), (1, 1)]
         }
         
-        #crée une liste servant a contenir les pièces 
+        #creates a list of figures
         blocks = [] 
 
-        #pour chaque pièce pouvant être construite 
+        #FOR each figure that can be built 
         for shapeName in availableShapesForSize:
-            #récupérer les coordonnées de la forme de la pièce 
+            #Get coordinates of figure shape 
             shapeCoords = shapes[shapeName]
-            #crée un bloc
+            #create a block with the shape and color
             self.conception(shapeCoords, color)
-            #ajouter ce bloc a la liste blocks 
+            #add the block to the list of blocks
             blocks.append(self.blocks)
-        #retourne la liste des pièces 
+        #return the list of blocks
         return blocks
