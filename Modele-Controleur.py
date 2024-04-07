@@ -168,7 +168,7 @@ class ModeleControleur():
         # Play with robot
         # Randomly select a figure
         figure = random.choice(self.blocks)
-        # Select a position from the -2 cells in the board
+        # Select a position from the -2 cells in the board (-1 means the square is empty, -2 means the square is empty and a one-piece block can be placed there.)
         available_coords = [(x, y) for y, row in enumerate(self.board) for x, cell in enumerate(row) if cell == -2]
         x, y = random.choice(available_coords)
         # Place the figure
@@ -235,7 +235,7 @@ class ModeleControleur():
                 for dx, dy in [(-1, -1), (1, -1), (-1, 1), (1, 1)]:
                     if 0 <= y1+dy < self.size and 0 <= x1+dx < self.size and self.vueScript.board[y1+dy][x1+dx] == -1:
                         self.vueScript.board[y1+dy][x1+dx] = -2
-
+                        
     def check_end_game(self):
         # Check if there are any -2 cells left in the board
         if not any(-2 in row for row in self.vueScript.board):
@@ -244,9 +244,15 @@ class ModeleControleur():
     def end_game(self):
         #displays an end-of-game window 
         end_game_window = tkinter.Toplevel(self.root)
-        end_game_window.title("Game Over")
+        end_game_window.title("Fin du jeu")
         end_game_window.geometry("200x100")
-        tkinter.Label(end_game_window, text="Game Over!").pack()
+        #determine who the winner is 
+        linkBetweenScoresAndPlayers = zip(self.playersScoreLabels, self.playerScoreText)
+        _, self.winnerValue = max(linkBetweenScoresAndPlayers, key=lambda x: x[1])
+        self.winner = tkinter.StringVar(self.winnerValue)
+        tkinter.Label(end_game_window, text="Le gagnant est : ").pack()
+        tkinter.Label(end_game_window, textvariable=self.winner).pack()
+
         #displays a button for relaunching the game 
         tkinter.Button(end_game_window, text="Relaunch", command=self.relaunchGame).pack()
         #displays a button tp close the window

@@ -23,28 +23,32 @@ class ConceptionPieces:
         
         #defines the shapes of the figures available for each board size 
         availableShapes = {
-            5: ["square","stick"],
-            6: ["square","stick"],
-            7: ["square","stick","L"],
-            8: ["square","stick","L"],
-            9: ["square","stick","L","cross"],
-            10: ["square","stick","L","cross"],
-            11: ["square","stick","L","cross","T"],
-            12 : ["block","block","square","stick","L","cross","T","z"],
-            13 : ["square","stick","L","cross","T","block"],
-            14 : ["square","stick","L","cross","T","block"],
-            15 : ["square","stick","L","cross","T","block","G"],
-            16 : ["square","stick","L","cross","T","block","G"],
-            17 : ["square","stick","L","cross","T","block","G","L2"],
-            18 : ["square","stick","L","cross","T","block","G","L2"],
-            19 : ["square","stick","L","cross","T","block","G","L2"],
-            20 : ["square","stick","L","cross","T", "block","G","L2"]
+            1 : ["block"],
+            2 : ["block"],
+            3 : ["block","G"],
+            4 : ["block","G"],
+            4 : ["block","G","cross"],
+            5 : ["block","G","cross"],
+            6 : ["block","G","cross"],
+            7 : ["block","G","cross","L"],
+            8 : ["block","G","cross","L"],
+            9 : ["block","G","cross","L","L2"],
+            10 : ["block","G","cross","L","L2"],
+            11 : ["block","G","cross","L","L2"],
+            12 : ["block","G","cross","L","L2","square"],
+            13 : ["block","G","cross","L","L2","square","stick"],
+            14 : ["block","G","cross","L","L2","square","stick","T","I"],
+            15 : ["block","G","cross","L","L2","square","stick","T","I","J"],
+            16 : ["block","G","cross","L","L2","square","stick","T","I","J","Z"],
+            17 : ["block","G","cross","L","L2","square","stick","T","I","J","Z","d","C"],
+            18 : ["block","G","cross","L","L2","square","stick","T","I","J","Z","d","C","1","InvertedT"],
+            19 : ["block","G","cross","L","L2","square","stick","T","I","J","Z","d","C","1","InvertedT","WideL","M"],
+            20 : ["block","G","cross","L","L2","square","stick","T","I","J","Z","d","C","1","InvertedT","WideL","M","lightning","4","p","z"]
         }
 
         #reduces the number of figures per player according to the number of players 
         if int(nbPlayers.get()) > 2 and int(nbPlayers.get()) <= 4:
-            availableShapesForSize = availableShapes.get(size - (int(nbPlayers.get())-2), [])
-            print(int(nbPlayers.get())-2)
+            availableShapesForSize = availableShapes.get(size - (int(nbPlayers.get()) // 2), [])
         else: 
             availableShapesForSize = availableShapes.get(size, [])
 
